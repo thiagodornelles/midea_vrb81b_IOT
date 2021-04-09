@@ -6,9 +6,10 @@
 #include "midea_controller.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <.env>
 
-const char *ssid = "";
-const char *password = "";
+const char *ssid = ENV_SSID;
+const char *password = ENV_PASSW;
 ESP8266WebServer server(8080);
 
 unsigned long key_value = 0;
@@ -25,7 +26,7 @@ void setup()
   Serial.begin(9600);
 
   while (!Serial) // Wait for the serial connection to be establised.
-      delay(50);  
+    delay(50);
 
   irrecv.enableIRIn(); // Start the receiver
   irsend.begin();
@@ -33,16 +34,17 @@ void setup()
 
   WiFi.hostname("JEREDY");
   WiFi.begin(ssid, password);
-  
+
   //Check wi-fi is connected to wi-fi network
-  while (WiFi.status() != WL_CONNECTED){
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(1000);
     Serial.print(".");
   }
   Serial.println("");
   Serial.println("WiFi connected..!");
   Serial.print("Got IP: ");
-  Serial.println(WiFi.localIP());  
+  Serial.println(WiFi.localIP());
 
   server.on("/", handle_on_connect);
   server.on("/power", handle_power);
@@ -58,7 +60,6 @@ void setup()
 
   server.begin();
   Serial.println("HTTP server started");
-  
 }
 
 void handle_on_connect()
@@ -96,17 +97,20 @@ void handle_right()
   server.send(200, "text/html", "RIGHT");
 }
 
-void handle_charge(){
+void handle_charge()
+{
   irsend.sendRaw(CHARGE, sizeof(CHARGE), 38);
   server.send(200, "text/html", "CHARGE");
 }
 
-void handle_program(){
+void handle_program()
+{
   irsend.sendRaw(CHANGE_PROGRAM, sizeof(CHANGE_PROGRAM), 38);
   server.send(200, "text/html", "CHANGE PROGRAM");
 }
 
-void handle_vacuum(){
+void handle_vacuum()
+{
   irsend.sendRaw(VACUUM_POWER, sizeof(VACUUM_POWER), 38);
   server.send(200, "text/html", "VACCUM POWER");
 }
@@ -124,15 +128,17 @@ void loop()
     serialPrintUint64(results.value, HEX);
     Serial.println();
     irrecv.resume(); // Receive the next value
-  }  
+  }
 
   //IN THE CASE OF DISCONNECTION
-  while (WiFi.status() != WL_CONNECTED) {  
-    WiFi.begin(ssid, password);  
-    while (WiFi.status() != WL_CONNECTED) {  
-        delay(1000);  
-        Serial.print(".");
-    }      
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED)
+    {
+      delay(1000);
+      Serial.print(".");
+    }
     Serial.println();
     Serial.println("WiFi connected..!");
     Serial.print("Got IP: ");
