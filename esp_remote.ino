@@ -3,10 +3,9 @@
 #include <IRrecv.h>
 #include <IRsend.h>
 #include <IRutils.h>
-#include "midea_controller.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
-#include <.env>
+#include "z_env_configs.h"
 
 const char *ssid = ENV_SSID;
 const char *password = ENV_PASSW;

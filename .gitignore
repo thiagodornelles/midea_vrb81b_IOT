@@ -1,1 +1,3 @@
-.env
+z_env_configs.h
+.vscode
+build
